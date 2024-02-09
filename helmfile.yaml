@@ -1,0 +1,21 @@
+---
+environments:
+  default:
+    values:
+      - environments/default/values.yaml
+    kubeContext: kind-workshop
+
+repositories:
+  - name: grafana
+    url: https://grafana.github.io/helm-charts
+
+---
+releases:
+  - name: lgtm
+    namespace: monitoring
+    createNamespace: true
+    chart: grafana/lgtm-distributed
+    version: 1.0.1
+    condition: lgtm.enabled
+    values:
+      - values/lgtm.yaml
