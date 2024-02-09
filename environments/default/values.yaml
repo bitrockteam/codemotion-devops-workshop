@@ -1,5 +1,8 @@
 lgtm:
   enabled: true
 
+prometheusOperatorCrds:
+  enabled: false
+
 grafanaAgent:
   enabled: true

@@ -16,6 +16,10 @@ agent:
       prometheus.operator.servicemonitors "primary" {
           forward_to = [prometheus.remote_write.primary.receiver]
       }
+      
+      mimir.rules.kubernetes "primary" {
+          address = "http://lgtm-mimir-nginx:80"
+      }
 
 controller:
   type: 'statefulset'

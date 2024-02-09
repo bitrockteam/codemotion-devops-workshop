@@ -17,12 +17,20 @@ mimir:
       enabled: true
     serviceMonitor:
       enabled: true
+    prometheusRule:
+      enabled: true
+      mimirAlerts: true
+      mimirRules: true
 
 tempo:
   metaMonitoring:
     serviceMonitor:
       enabled: true
+  prometheusRule:
+    enabled: true
 
 loki:
   serviceMonitor:
+    enabled: true
+  prometheusRule:
     enabled: true

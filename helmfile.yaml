@@ -15,9 +15,17 @@ repositories:
     url: https://grafana.github.io/helm-charts
   - name: bedag
     url: https://bedag.github.io/helm-charts/
+  - name: prometheus-community
+    url: https://prometheus-community.github.io/helm-charts
 
 ---
 releases:
+  - name: prometheus-operator-crds
+    namespace: monitoring
+    version: 9.0.1
+    condition: prometheusOperatorCrds.enabled
+    chart: prometheus-community/prometheus-operator-crds
+
   - name: lgtm
     namespace: monitoring
     chart: grafana/lgtm-distributed
@@ -25,6 +33,8 @@ releases:
     condition: lgtm.enabled
     values:
       - values/lgtm.yaml
+    needs:
+      - prometheus-operator-crds
 
   - name: grafana-agent-metrics
     namespace: monitoring
@@ -33,6 +43,8 @@ releases:
     condition: grafanaAgent.enabled
     values:
       - values/grafana-agent-metrics.yaml
+    needs:
+      - prometheus-operator-crds
 
   - name: grafana-agent-logs
     namespace: monitoring
@@ -41,3 +53,5 @@ releases:
     condition: grafanaAgent.enabled
     values:
       - values/grafana-agent-logs.yaml
+    needs:
+      - prometheus-operator-crds
