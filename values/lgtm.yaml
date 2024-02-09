@@ -14,13 +14,9 @@ grafana:
 mimir:
   metaMonitoring:
     dashboards:
-      enabled: false
+      enabled: true
     serviceMonitor:
-      enabled: false
-    grafanaAgent:
-      enabled: false
-      logs:
-        enabled: false
+      enabled: true
 
 loki:
   serviceMonitor:
