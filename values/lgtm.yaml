@@ -5,3 +5,19 @@ grafana:
 
   adminUser: admin
   adminPassword: password
+
+  sidecar:
+    dashboards:
+      enabled: true
+      labelValue: "1"
+
+mimir:
+  metaMonitoring:
+    dashboards:
+      enabled: true
+    serviceMonitor:
+      enabled: true
+
+loki:
+  serviceMonitor:
+    enabled: true

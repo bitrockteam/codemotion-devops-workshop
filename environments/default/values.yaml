@@ -1,2 +1,8 @@
 lgtm:
   enabled: true
+
+grafanaAgentOperator:
+  enabled: true
+
+grafanaAgent:
+  enabled: true

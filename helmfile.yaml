@@ -1,21 +1,42 @@
 ---
+helmDefaults:
+  createNamespace: true
+
 environments:
   default:
     values:
       - environments/default/values.yaml
     kubeContext: kind-workshop
 
+
 repositories:
   - name: grafana
     url: https://grafana.github.io/helm-charts
+  - name: bedag
+    url: https://bedag.github.io/helm-charts/
 
 ---
 releases:
   - name: lgtm
     namespace: monitoring
-    createNamespace: true
     chart: grafana/lgtm-distributed
     version: 1.0.1
     condition: lgtm.enabled
     values:
       - values/lgtm.yaml
+
+  - name: grafana-agent-operator
+    namespace: monitoring
+    chart: grafana/grafana-agent-operator
+    version: 0.3.15
+    condition: grafanaAgentOperator.enabled
+    values:
+      - values/grafana-agent-operator.yaml
+
+  - name: grafnaa-agent
+    namespace: monitoring
+    chart: bedag/raw
+    version: 2.0.0
+    condition: grafanaAgent.enabled
+    values:
+      - values/grafana-agent.yaml
