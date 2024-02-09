@@ -18,6 +18,11 @@ mimir:
     serviceMonitor:
       enabled: true
 
+tempo:
+  metaMonitoring:
+    serviceMonitor:
+      enabled: true
+
 loki:
   serviceMonitor:
-    enabled: false
+    enabled: true

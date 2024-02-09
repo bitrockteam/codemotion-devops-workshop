@@ -1,6 +1,7 @@
 ---
 helmDefaults:
   createNamespace: true
+  historyMax: 5
 
 environments:
   default:
