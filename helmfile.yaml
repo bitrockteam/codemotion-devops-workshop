@@ -33,7 +33,7 @@ releases:
     values:
       - values/grafana-agent-operator.yaml
 
-  - name: grafnaa-agent
+  - name: grafana-agent
     namespace: monitoring
     chart: bedag/raw
     version: 2.0.0

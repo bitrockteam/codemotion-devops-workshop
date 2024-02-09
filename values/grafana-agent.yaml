@@ -47,7 +47,7 @@ resources:
     subjects:
       - kind: ServiceAccount
         name: grafana-agent
-        namespace: default
+        namespace: monitoring
   - apiVersion: monitoring.grafana.com/v1alpha1
     kind: GrafanaAgent
     metadata:
@@ -82,7 +82,7 @@ resources:
         agent: grafana-agent-metrics
     spec:
       remoteWrite:
-        - url: http://lgtm-mimir-distributor:9095/api/v1/push
+        - url: http://lgtm-mimir-nginx:80/api/v1/push
 
       # Supply an empty namespace selector to look in all namespaces. Remove
       # this to only look in the same namespace as the MetricsInstance CR
@@ -169,6 +169,7 @@ resources:
       selector:
         matchLabels:
           app.kubernetes.io/name: kubelet
+
   - apiVersion: monitoring.grafana.com/v1alpha1
     kind: LogsInstance
     metadata:
@@ -178,7 +179,7 @@ resources:
         agent: grafana-agent-logs
     spec:
       clients:
-        - url: http://lgtm-loki-distributor:3100/api/v1/push
+        - url: http://lgtm-loki-gateway:80/loki/api/v1/push
 
       # Supply an empty namespace selector to look in all namespaces. Remove
       # this to only look in the same namespace as the LogsInstance CR
@@ -194,9 +195,7 @@ resources:
       namespace: monitoring
     spec:
       pipelineStages:
-        - docker: { }
+        - docker: {}
       namespaceSelector:
-        matchNames:
-          - default
-      selector:
-        matchLabels: { }
+        any: true
+      selector: {}
