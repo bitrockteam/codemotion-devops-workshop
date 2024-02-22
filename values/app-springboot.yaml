@@ -7,7 +7,8 @@ deployment:
     language: java
   image:
     repository: bitripa/springboot-sample-app
-    tag: latest
+    tag: 0.0.2
+    pullPolicy: Always
   ports:
     - containerPort: 8080
   containerSecurityContext:

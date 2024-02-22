@@ -32,7 +32,7 @@ resources:
             tls:
               insecure: true
           otlp/tempo:
-            endpoint: lgtm-tempo-ingester.monitoring.svc:9095
+            endpoint: lgtm-tempo-distributor.monitoring.svc:4317
             tls:
               insecure: true
 

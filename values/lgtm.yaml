@@ -28,6 +28,15 @@ tempo:
       enabled: true
   prometheusRule:
     enabled: true
+  traces:
+    otlp:
+      grpc:
+        enabled: true
+      http:
+        enabled: true
+  ingester:
+    config:
+      replication_factor: 1
 
 loki:
   serviceMonitor:
