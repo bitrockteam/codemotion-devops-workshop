@@ -9,6 +9,10 @@ kind:
 		  --context kind-workshop
 		kubectl config use-context kind-workshop
 
+cleanup:
+		 kind delete cluster \
+ 			--name workshop
+
 crds:
 		helmfile apply -l component=crds
 
