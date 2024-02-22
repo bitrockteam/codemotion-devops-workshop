@@ -17,16 +17,22 @@ repositories:
     url: https://bedag.github.io/helm-charts/
   - name: prometheus-community
     url: https://prometheus-community.github.io/helm-charts
+  - name: opentelemetry-helm
+    url: https://open-telemetry.github.io/opentelemetry-helm-charts
 
 ---
 releases:
   - name: prometheus-operator-crds
+    labels:
+      component: crds
     namespace: monitoring
     version: 9.0.1
     condition: prometheusOperatorCrds.enabled
     chart: prometheus-community/prometheus-operator-crds
 
   - name: lgtm
+    labels:
+      component: lgtm
     namespace: monitoring
     chart: grafana/lgtm-distributed
     version: 1.0.1
@@ -37,6 +43,8 @@ releases:
       - prometheus-operator-crds
 
   - name: grafana-agent-metrics
+    labels:
+      component: grafanaAgent
     namespace: monitoring
     chart: grafana/grafana-agent
     version: 0.31.1
@@ -47,6 +55,8 @@ releases:
       - prometheus-operator-crds
 
   - name: grafana-agent-logs
+    labels:
+      component: grafanaAgent
     namespace: monitoring
     chart: grafana/grafana-agent
     version: 0.31.1
@@ -55,3 +65,23 @@ releases:
       - values/grafana-agent-logs.yaml
     needs:
       - prometheus-operator-crds
+
+  - name: opentelemetry-operator
+    labels:
+      component: otel-operator
+    namespace: monitoring
+    chart: opentelemetry-helm/opentelemetry-operator
+    version: 0.47.0
+    condition: otel.enabled
+    values:
+      - values/otel-operator.yaml
+
+  - name: opentelemtry-instrumentation
+    labels:
+      component: otel-instrumentation
+    namespace: monitoring
+    chart: bedag/raw
+    version: 2.0.0
+    condition: otel.enabled
+    values:
+      - values/otel-instrumentation.yaml

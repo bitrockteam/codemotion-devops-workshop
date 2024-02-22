@@ -1,0 +1,68 @@
+resources:
+  - apiVersion: opentelemetry.io/v1alpha1
+    kind: OpenTelemetryCollector
+    metadata:
+      name: primary
+      namespace: monitoring
+    spec:
+      config: |
+        receivers:
+          otlp:
+            protocols:
+              grpc:
+                endpoint: 0.0.0.0:4317
+              http:
+                endpoint: 0.0.0.0:4318
+        processors:
+          memory_limiter:
+            check_interval: 1s
+            limit_percentage: 75
+            spike_limit_percentage: 15
+          batch:
+            send_batch_size: 10000
+            timeout: 10s
+
+        exporters:
+          prometheusremotewrite:
+            endpoint: http://lgtm-mimir-nginx.monitoring.svc/api/v1/push
+          loki:
+            endpoint: http://lgtm-loki-gateway.monitoring.svc/loki/api/v1/push
+          otlp:
+            endpoint: lgtm-tempo-ingester.monitoring.svc:9095
+            tls:
+              insecure: true
+
+        service:
+          pipelines:
+            traces:
+              receivers: [otlp]
+              processors: [memory_limiter, batch]
+              exporters: [otlp]
+            metrics:
+              receivers: [otlp]
+              processors: [memory_limiter, batch]
+              exporters: [prometheusremotewrite]
+            logs:
+              receivers: [otlp]
+              processors: [memory_limiter, batch]
+              exporters: [loki]
+  - apiVersion: opentelemetry.io/v1alpha1
+    kind: Instrumentation
+    metadata:
+      name: default
+    spec:
+      exporter:
+        endpoint: http://primary-collector.monitoring.svc:4318
+      propagators:
+        - tracecontext
+        - baggage
+        - b3
+      java:
+        env:
+          - name: OTEL_INSTRUMENTATION_LOGBACK_APPENDER_ENABLED
+            value: "true"
+          - name: OTEL_INSTRUMENTATION_LOGBACK_MDC_ENABLED
+            value: "true"
+      sampler:
+        type: parentbased_traceidratio
+        argument: "1"

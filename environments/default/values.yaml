@@ -2,7 +2,10 @@ lgtm:
   enabled: true
 
 prometheusOperatorCrds:
-  enabled: false
+  enabled: true
 
 grafanaAgent:
+  enabled: true
+
+otel:
   enabled: true
