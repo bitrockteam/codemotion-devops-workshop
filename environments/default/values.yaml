@@ -5,7 +5,10 @@ prometheusOperatorCrds:
   enabled: true
 
 grafanaAgent:
-  enabled: true
+  enabled: false
 
 otel:
+  enabled: true
+
+apps:
   enabled: true

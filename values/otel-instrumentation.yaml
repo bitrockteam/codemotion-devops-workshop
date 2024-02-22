@@ -23,11 +23,15 @@ resources:
             timeout: 10s
 
         exporters:
-          prometheusremotewrite:
+          prometheusremotewrite/mimir:
             endpoint: http://lgtm-mimir-nginx.monitoring.svc/api/v1/push
+            tls:
+              insecure: true
           loki:
             endpoint: http://lgtm-loki-gateway.monitoring.svc/loki/api/v1/push
-          otlp:
+            tls:
+              insecure: true
+          otlp/tempo:
             endpoint: lgtm-tempo-ingester.monitoring.svc:9095
             tls:
               insecure: true
@@ -37,11 +41,11 @@ resources:
             traces:
               receivers: [otlp]
               processors: [memory_limiter, batch]
-              exporters: [otlp]
+              exporters: [otlp/tempo]
             metrics:
               receivers: [otlp]
               processors: [memory_limiter, batch]
-              exporters: [prometheusremotewrite]
+              exporters: [prometheusremotewrite/mimir]
             logs:
               receivers: [otlp]
               processors: [memory_limiter, batch]
@@ -52,16 +56,28 @@ resources:
       name: default
     spec:
       exporter:
-        endpoint: http://primary-collector.monitoring.svc:4318
+        endpoint: http://primary-collector.monitoring.svc:4317
       propagators:
         - tracecontext
         - baggage
         - b3
+      python:
+        env:
+          - name: OTEL_LOGS_EXPORTER
+            value: otlp_proto_http
+          - name: OTEL_PYTHON_LOGGING_AUTO_INSTRUMENTATION_ENABLED
+            value: 'true'
+          - name: OTEL_EXPORTER_OTLP_ENDPOINT
+            value: http://primary-collector.monitoring.svc:4318
       java:
         env:
           - name: OTEL_INSTRUMENTATION_LOGBACK_APPENDER_ENABLED
             value: "true"
           - name: OTEL_INSTRUMENTATION_LOGBACK_MDC_ENABLED
+            value: "true"
+          - name: OTEL_INSTRUMENTATION_SPRING_CORE_ENABLED
+            value: "true"
+          - name: OTEL_INSTRUMENTATION_SPRING_WEB_ENABLED
             value: "true"
       sampler:
         type: parentbased_traceidratio

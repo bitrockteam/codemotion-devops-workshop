@@ -1,0 +1,20 @@
+applicationName: sample-springboot
+
+deployment:
+  additionalPodAnnotations:
+    instrumentation.opentelemetry.io/inject-java: monitoring/default
+  podLabels:
+    language: java
+  image:
+    repository: bitripa/springboot-sample-app
+    tag: latest
+  ports:
+    - containerPort: 8080
+  containerSecurityContext:
+    readOnlyRootFilesystem: false
+    runAsNonRoot: false
+
+service:
+  ports:
+    - port: 8080
+      name: http

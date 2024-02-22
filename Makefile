@@ -23,3 +23,6 @@ otel-operator:
 
 otel-instrumentation:
 		helmfile apply -l component=otel-instrumentation
+
+apps:
+		helmfile apply -l component=apps
