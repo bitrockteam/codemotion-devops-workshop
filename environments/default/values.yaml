@@ -2,7 +2,7 @@ lgtm:
   enabled: true
 
 prometheusOperatorCrds:
-  enabled: true
+  enabled: false
 
 grafanaAgent:
   enabled: false

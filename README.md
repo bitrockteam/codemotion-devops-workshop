@@ -28,3 +28,13 @@ kubectl get secrets -n monitoring lgtm-grafana -o yaml | yq .data.admin-password
 
 # open localhost:30000
 ```
+
+# Demo
+
+```bash
+make kind
+make lgtm
+make otel-operator
+make otel-instrumentation
+make apps
+```

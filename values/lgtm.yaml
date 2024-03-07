@@ -12,22 +12,22 @@ grafana:
       labelValue: "1"
 
 mimir:
-  metaMonitoring:
-    dashboards:
-      enabled: true
-    serviceMonitor:
-      enabled: true
-    prometheusRule:
-      enabled: true
-      mimirAlerts: true
-      mimirRules: true
+#  metaMonitoring:
+#    dashboards:
+#      enabled: true
+#    serviceMonitor:
+#      enabled: true
+#    prometheusRule:
+#      enabled: true
+#      mimirAlerts: true
+#      mimirRules: true
 
 tempo:
-  metaMonitoring:
-    serviceMonitor:
-      enabled: true
-  prometheusRule:
-    enabled: true
+#  metaMonitoring:
+#    serviceMonitor:
+#      enabled: true
+#  prometheusRule:
+#    enabled: true
   traces:
     otlp:
       grpc:
@@ -39,7 +39,7 @@ tempo:
       replication_factor: 1
 
 loki:
-  serviceMonitor:
-    enabled: true
-  prometheusRule:
-    enabled: true
+#  serviceMonitor:
+#    enabled: true
+#  prometheusRule:
+#    enabled: true
