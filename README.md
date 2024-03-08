@@ -26,13 +26,14 @@ helmfile sync
 kubectl get secrets -n monitoring lgtm-grafana -o yaml | yq .data.admin-user | base64 -d
 kubectl get secrets -n monitoring lgtm-grafana -o yaml | yq .data.admin-password | base64 -d
 
-# open localhost:30000
+# open localhost:30000/grafana
 ```
 
 # Demo
 
 ```bash
 make kind
+make base
 make lgtm
 make otel-operator
 make otel-instrumentation
