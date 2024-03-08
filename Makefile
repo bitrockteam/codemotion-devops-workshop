@@ -16,14 +16,8 @@ clean:
 base:
 		helmfile apply -l component=base
 
-crds:
-		helmfile apply -l component=crds
-
 lgtm:
 		helmfile apply -l component=lgtm
-
-grafanaAgent:
-		helmfile apply -l component=grafanaAgent
 
 otel-operator:
 		helmfile apply -l component=otel-operator

@@ -1,11 +1,8 @@
-lgtm:
+ingress:
   enabled: true
 
-prometheusOperatorCrds:
-  enabled: false
-
-grafanaAgent:
-  enabled: false
+lgtm:
+  enabled: true
 
 otel:
   enabled: true

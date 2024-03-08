@@ -15,8 +15,6 @@ repositories:
     url: https://grafana.github.io/helm-charts
   - name: bedag
     url: https://bedag.github.io/helm-charts/
-  - name: prometheus-community
-    url: https://prometheus-community.github.io/helm-charts
   - name: opentelemetry-helm
     url: https://open-telemetry.github.io/opentelemetry-helm-charts
   - name: stakater
@@ -32,16 +30,9 @@ releases:
     namespace: default
     version: 4.10.0
     chart: ingress-nginx/ingress-nginx
+    condition: ingress.enabled
     values:
       - values/nginx.yaml
-
-  - name: prometheus-operator-crds
-    labels:
-      component: crds
-    namespace: monitoring
-    version: 9.0.1
-    condition: prometheusOperatorCrds.enabled
-    chart: prometheus-community/prometheus-operator-crds
 
   - name: lgtm
     labels:
@@ -52,32 +43,6 @@ releases:
     condition: lgtm.enabled
     values:
       - values/lgtm.yaml
-    needs:
-      - prometheus-operator-crds
-
-  - name: grafana-agent-metrics
-    labels:
-      component: grafanaAgent
-    namespace: monitoring
-    chart: grafana/grafana-agent
-    version: 0.31.1
-    condition: grafanaAgent.enabled
-    values:
-      - values/grafana-agent-metrics.yaml
-    needs:
-      - prometheus-operator-crds
-
-  - name: grafana-agent-logs
-    labels:
-      component: grafanaAgent
-    namespace: monitoring
-    chart: grafana/grafana-agent
-    version: 0.31.1
-    condition: grafanaAgent.enabled
-    values:
-      - values/grafana-agent-logs.yaml
-    needs:
-      - prometheus-operator-crds
 
   - name: opentelemetry-operator
     labels:

@@ -21,7 +21,7 @@ grafana:
           jsonData:
             derivedFields:
               - datasourceName: Tempo
-                matcherRegex: "traceid=(\\w+)"
+                matcherRegex: '.*\,\"traceid\":\"(\w+)\"'
                 name: TraceID
                 url: "$${__value.raw}"
                 datasourceUid: tempo
@@ -58,24 +58,7 @@ grafana:
       root_url: http://localhost:30000/grafana/
       serve_from_sub_path: true
 
-
-mimir:
-#  metaMonitoring:
-#    dashboards:
-#      enabled: true
-#    serviceMonitor:
-#      enabled: true
-#    prometheusRule:
-#      enabled: true
-#      mimirAlerts: true
-#      mimirRules: true
-
 tempo:
-#  metaMonitoring:
-#    serviceMonitor:
-#      enabled: true
-#  prometheusRule:
-#    enabled: true
   traces:
     otlp:
       grpc:
@@ -87,7 +70,5 @@ tempo:
       replication_factor: 1
 
 loki:
-#  serviceMonitor:
-#    enabled: true
-#  prometheusRule:
-#    enabled: true
+
+mimir:
