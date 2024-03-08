@@ -1,4 +1,4 @@
-all: kind lgtm otel-operator otel-instrumentation apps
+all: kind base lgtm otel-operator otel-instrumentation apps
 
 kind:
 		kind create cluster \
@@ -12,6 +12,9 @@ kind:
 clean:
 		 kind delete cluster \
  			--name workshop
+
+base:
+		helmfile apply -l component=base
 
 crds:
 		helmfile apply -l component=crds

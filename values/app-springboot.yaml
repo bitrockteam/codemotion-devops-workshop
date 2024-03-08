@@ -19,3 +19,15 @@ service:
   ports:
     - port: 8080
       name: http
+
+ingress:
+  enabled: true
+  ingressClassName: nginx
+  servicePort: http
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /$1
+    nginx.ingress.kubernetes.io/enable-opentelemetry: "true"
+  hosts:
+    - host: localhost
+      paths:
+      - path: /springboot/(.+)

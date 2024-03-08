@@ -21,9 +21,20 @@ repositories:
     url: https://open-telemetry.github.io/opentelemetry-helm-charts
   - name: stakater
     url: https://stakater.github.io/stakater-charts
+  - name: ingress-nginx
+    url: https://kubernetes.github.io/ingress-nginx
 
 ---
 releases:
+  - name: ingress-nginx
+    labels:
+      component: base
+    namespace: default
+    version: 4.10.0
+    chart: ingress-nginx/ingress-nginx
+    values:
+      - values/nginx.yaml
+
   - name: prometheus-operator-crds
     labels:
       component: crds
@@ -78,7 +89,7 @@ releases:
     values:
       - values/otel-operator.yaml
 
-  - name: opentelemtry-instrumentation
+  - name: opentelemetry-instrumentation
     labels:
       component: otel-instrumentation
     namespace: monitoring

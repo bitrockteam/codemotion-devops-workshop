@@ -1,8 +1,4 @@
 grafana:
-  service:
-    type: NodePort
-    nodePort: 30000
-
   adminUser: admin
   adminPassword: password
 
@@ -10,6 +6,58 @@ grafana:
     dashboards:
       enabled: true
       labelValue: "1"
+
+  datasources:
+    datasources.yaml:
+      apiVersion: 1
+      # -- Datasources linked to the Grafana instance. Override if you disable any components.
+      datasources:
+        # https://grafana.com/docs/grafana/latest/datasources/loki/#provision-the-loki-data-source
+        - name: Loki
+          uid: loki
+          type: loki
+          url: http://lgtm-loki-gateway
+          isDefault: false
+          jsonData:
+            derivedFields:
+              - datasourceName: Tempo
+                matcherRegex: "traceid=(\\w+)"
+                name: TraceID
+                url: "$${__value.raw}"
+                datasourceUid: tempo
+        # https://grafana.com/docs/grafana/latest/datasources/prometheus/#provision-the-data-source
+        - name: Mimir
+          uid: prom
+          type: prometheus
+          url: http://lgtm-mimir-nginx/prometheus
+          isDefault: true
+        # https://grafana.com/docs/grafana/latest/datasources/tempo/configure-tempo-data-source/#provision-the-data-source
+        - name: Tempo
+          uid: tempo
+          type: tempo
+          url: http://lgtm-tempo-query-frontend:3100
+          isDefault: false
+          jsonData:
+            tracesToLogsV2:
+              datasourceUid: loki
+            lokiSearch:
+              datasourceUid: loki
+            tracesToMetrics:
+              datasourceUid: prom
+            serviceMap:
+              datasourceUid: prom
+  ingress:
+    enabled: true
+    ingressClassName: nginx
+    path: /grafana
+    hosts:
+      - localhost
+  grafana.ini:
+    server:
+      domain: localhost
+      root_url: http://localhost:30000/grafana/
+      serve_from_sub_path: true
+
 
 mimir:
 #  metaMonitoring:
