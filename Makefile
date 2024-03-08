@@ -1,4 +1,4 @@
-all: kind
+all: kind lgtm otel-operator otel-instrumentation apps
 
 kind:
 		kind create cluster \
@@ -9,7 +9,7 @@ kind:
 		  --context kind-workshop
 		kubectl config use-context kind-workshop
 
-cleanup:
+clean:
 		 kind delete cluster \
  			--name workshop
 
