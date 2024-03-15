@@ -7,7 +7,7 @@
 - kind
 - helmfile
 - helm
-  - helm-diff
+- helm-diff
 
 ## Setup Kubernetes Cluster 
 
