@@ -39,3 +39,9 @@ make otel-operator
 make otel-instrumentation
 make apps
 ```
+
+# Making some traffic
+
+```bash
+ab -n 10000 http://localhost:30000/springboot/hello
+```
