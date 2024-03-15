@@ -44,6 +44,16 @@ releases:
     values:
       - values/lgtm.yaml
 
+  - name: http-dashboard
+    labels:
+      component: lgtm
+    namespace: monitoring
+    chart: bedag/raw
+    version: 2.0.0
+    condition: lgtm.enabled
+    values:
+      - values/http-dashboard.yaml
+
   - name: opentelemetry-operator
     labels:
       component: otel-operator
