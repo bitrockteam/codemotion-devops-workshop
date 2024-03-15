@@ -114,3 +114,13 @@ releases:
     condition: apps.enabled
     values:
       - values/app-flask.yaml
+
+  - name: sample-express
+    labels:
+      component: apps
+    namespace: apps
+    chart: stakater/application
+    version: 2.3.2
+    condition: apps.enabled
+    values:
+      - values/app-express.yaml

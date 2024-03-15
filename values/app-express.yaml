@@ -1,12 +1,12 @@
-applicationName: sample-flask
+applicationName: sample-express
 
 deployment:
   additionalPodAnnotations:
-    instrumentation.opentelemetry.io/inject-python: monitoring/default
+    instrumentation.opentelemetry.io/inject-nodejs: monitoring/default
   podLabels:
-    language: python
+    language: nodejs
   image:
-    repository: bitripa/flask-sample-app
+    repository: bitripa/express-sample-app
     tag: test
     pullPolicy: Always
   ports:
@@ -30,4 +30,4 @@ ingress:
   hosts:
     - host: localhost
       paths:
-      - path: /flask/(.+)
+      - path: /express/(.+)

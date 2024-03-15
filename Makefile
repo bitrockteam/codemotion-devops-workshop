@@ -29,4 +29,4 @@ apps:
 		helmfile apply -l component=apps
 
 loadImage:
-		kind load docker-image $(image) -n workshop
+		kind load docker-image $(image) -n worksho
