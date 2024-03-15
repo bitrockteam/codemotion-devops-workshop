@@ -66,9 +66,17 @@ tempo:
       http:
         enabled: true
   ingester:
+    replicas: 1
     config:
       replication_factor: 1
 
 loki:
 
 mimir:
+  ingester:
+    replicas: 1
+    zoneAwareReplication:
+      enabled: false
+  store_gateway:
+    zoneAwareReplication:
+      enabled: false
