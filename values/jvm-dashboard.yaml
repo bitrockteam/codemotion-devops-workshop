@@ -139,7 +139,7 @@ resources:
                   "uid": "${datasource}"
                 },
                 "editorMode": "code",
-                "expr": "sum by (job) (rate({__name__=~\"http_server_request_duration_seconds_count|http_server_request_duration_count|http_server_duration_seconds_count|http_server_duration_count|http_server_duration_milliseconds_count|http_server_requests_milliseconds_count|http_server_requests_count|http_server_requests_seconds_count\", job=~\"$job\"}[$__rate_interval]))",
+                "expr": "sum by (job) (rate({__name__=~\"http_server_request_duration_seconds_count|http_server_request_duration_count|http_server_duration_seconds_count|http_server_duration_count|http_server_duration_milliseconds_count|http_server_requests_milliseconds_count|http_server_requests_count|http_server_requests_seconds_count\", job=~\"$job\"}[5m]))",
                 "instant": false,
                 "legendFormat": "__auto",
                 "range": true,
@@ -235,7 +235,7 @@ resources:
                   "uid": "${datasource}"
                 },
                 "editorMode": "code",
-                "expr": "(sum by (job)(rate({__name__=~\"http_server_request_duration_seconds_count|http_server_request_duration_count\", job=~\"$job\", http_response_status_code=~\"5.*\"}[$__rate_interval]))) / on (job) (sum by (job)(rate({__name__=~\"http_server_request_duration_seconds_count|http_server_request_duration_count\", job=~\"$job\"}[$__rate_interval])))\nor\n(sum by (job)(rate({__name__=~\"http_server_duration_milliseconds_count|http_server_duration_seconds_count|http_server_duration_count\", job=~\"$job\", http_status_code=~\"5.*\"}[$__rate_interval]))) / on (job) (sum by (job)(rate({__name__=~\"http_server_duration_milliseconds_count|http_server_duration_seconds_count|http_server_duration_count\", job=~\"$job\"}[$__rate_interval])))\nor\n(sum by (job)(rate({__name__=~\"http_server_requests_milliseconds_count|http_server_requests_count|http_server_requests_seconds_count\", job=~\"$job\", outcome=\"SERVER_ERROR\"}[$__rate_interval]))) / on (job) (sum by (job)(rate({__name__=~\"http_server_requests_milliseconds_count|http_server_requests_count|http_server_requests_seconds_count\", job=~\"$job\"}[$__rate_interval])))\n",
+                "expr": "(sum by (job)(rate({__name__=~\"http_server_request_duration_seconds_count|http_server_request_duration_count\", job=~\"$job\", http_response_status_code=~\"5.*\"}[5m]))) / on (job) (sum by (job)(rate({__name__=~\"http_server_request_duration_seconds_count|http_server_request_duration_count\", job=~\"$job\"}[5m])))\nor\n(sum by (job)(rate({__name__=~\"http_server_duration_milliseconds_count|http_server_duration_seconds_count|http_server_duration_count\", job=~\"$job\", http_status_code=~\"5.*\"}[5m]))) / on (job) (sum by (job)(rate({__name__=~\"http_server_duration_milliseconds_count|http_server_duration_seconds_count|http_server_duration_count\", job=~\"$job\"}[5m])))\nor\n(sum by (job)(rate({__name__=~\"http_server_requests_milliseconds_count|http_server_requests_count|http_server_requests_seconds_count\", job=~\"$job\", outcome=\"SERVER_ERROR\"}[5m]))) / on (job) (sum by (job)(rate({__name__=~\"http_server_requests_milliseconds_count|http_server_requests_count|http_server_requests_seconds_count\", job=~\"$job\"}[5m])))\n",
                 "instant": false,
                 "legendFormat": "__auto",
                 "range": true,
@@ -331,7 +331,7 @@ resources:
                   "uid": "${datasource}"
                 },
                 "editorMode": "code",
-                "expr": "(histogram_quantile(0.95, sum by(le, job) (rate({__name__=~\"http_server_request_duration_seconds_bucket|http_server_request_duration_bucket|http_server_duration_seconds_bucket|http_server_duration_bucket|http_server_requests_seconds_bucket\", job=~\"$job\"}[$__rate_interval]))))\nor\n(histogram_quantile(0.95, sum by(le, job) (rate({__name__=~\"http_server_duration_milliseconds_bucket|http_server_requests_milliseconds_bucket|http_server_requests_bucket\", job=~\"$job\"}[$__rate_interval]))) / 1000)\n",
+                "expr": "(histogram_quantile(0.95, sum by(le, job) (rate({__name__=~\"http_server_request_duration_seconds_bucket|http_server_request_duration_bucket|http_server_duration_seconds_bucket|http_server_duration_bucket|http_server_requests_seconds_bucket\", job=~\"$job\"}[5m]))))\nor\n(histogram_quantile(0.95, sum by(le, job) (rate({__name__=~\"http_server_duration_milliseconds_bucket|http_server_requests_milliseconds_bucket|http_server_requests_bucket\", job=~\"$job\"}[5m]))) / 1000)\n",
                 "instant": false,
                 "legendFormat": "{{job}}",
                 "range": true,
@@ -613,7 +613,7 @@ resources:
                   "uid": "${datasource}"
                 },
                 "editorMode": "code",
-                "expr": "(sum by(job) (rate({__name__=~\"jvm_gc_duration_sum|jvm_gc_duration_seconds_sum|process_runtime_jvm_gc_duration_sum|process_runtime_jvm_gc_duration_seconds_sum|jvm_gc_pause_sum|jvm_gc_pause_seconds_sum\",job=~\"$job\"}[$__rate_interval])))\nor\n(sum by(job) (rate(jvm_gc_pause_milliseconds_sum{job=~\"$job\"}[$__rate_interval])) / 1000)",
+                "expr": "(sum by(job) (rate({__name__=~\"jvm_gc_duration_sum|jvm_gc_duration_seconds_sum|process_runtime_jvm_gc_duration_sum|process_runtime_jvm_gc_duration_seconds_sum|jvm_gc_pause_sum|jvm_gc_pause_seconds_sum\",job=~\"$job\"}[5m])))\nor\n(sum by(job) (rate(jvm_gc_pause_milliseconds_sum{job=~\"$job\"}[5m])) / 1000)",
                 "hide": false,
                 "legendFormat": "__auto",
                 "range": true,
