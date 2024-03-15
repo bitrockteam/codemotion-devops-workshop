@@ -1,6 +1,15 @@
 # Codemotion
 
-## Setup Kubernetes Cluster
+## Setup local environment
+
+- Docker
+- kubectl
+- kind
+- helmfile
+- helm
+- helm-diff
+
+## Setup Kubernetes Cluster 
 
 ```bash
 kind create cluster \
