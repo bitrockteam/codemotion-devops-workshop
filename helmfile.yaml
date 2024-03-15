@@ -83,3 +83,13 @@ releases:
     condition: apps.enabled
     values:
       - values/app-springboot.yaml
+
+  - name: sample-flask
+    labels:
+      component: apps
+    namespace: apps
+    chart: stakater/application
+    version: 2.3.2
+    condition: apps.enabled
+    values:
+      - values/app-flask.yaml
