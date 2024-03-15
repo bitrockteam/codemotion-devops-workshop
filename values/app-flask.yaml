@@ -4,19 +4,16 @@ deployment:
   additionalPodAnnotations:
     instrumentation.opentelemetry.io/inject-python: monitoring/default
   podLabels:
-    language: java
+    language: python
   image:
     repository: bitripa/flask-sample-app
     tag: test
-    pullPolicy: Always
+    pullPolicy: IfNotPresent
   ports:
     - containerPort: 8080
   containerSecurityContext:
     readOnlyRootFilesystem: false
     runAsNonRoot: false
-  resources:
-    limits:
-      memory: 512Mi
 
 service:
   ports:

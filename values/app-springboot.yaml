@@ -8,7 +8,7 @@ deployment:
   image:
     repository: bitripa/springboot-sample-app
     tag: test
-    pullPolicy: Always
+    pullPolicy: IfNotPresent
   ports:
     - containerPort: 8080
   containerSecurityContext:

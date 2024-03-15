@@ -27,3 +27,6 @@ otel-instrumentation:
 
 apps:
 		helmfile apply -l component=apps
+
+loadImage:
+		kind load docker-image $(image) -n workshop
