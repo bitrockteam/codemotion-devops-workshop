@@ -3,3 +3,6 @@ admissionWebhooks:
     enabled: false
   autoGenerateCert:
     enabled: true
+manager:
+  image:
+    tag: 0.96.0
