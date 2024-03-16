@@ -2,6 +2,7 @@
 
 ## Setup local environment
 
+Required software:
 - Docker
 - kubectl
 - kind
@@ -51,6 +52,28 @@ make apps
 
 # Making some traffic
 
+benchmark springboot health check
+
 ```bash
 ab -n 10000 http://localhost:30000/springboot/hello
 ```
+
+benchmark express health check
+
+```bash
+ab -n 10000 http://localhost:30000/express/health
+```
+
+create an order
+
+```bash
+curl http://localhost:30000/springboot/orders -d '{"customer":"simoexpo", "product":"banana", "quantity": 10}' -H "Content-Type: application/json"
+```
+
+get orders
+
+```bash
+curl http://localhost:30000/springboot/orders
+```
+
+

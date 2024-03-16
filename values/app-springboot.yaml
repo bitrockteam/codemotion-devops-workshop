@@ -14,6 +14,9 @@ deployment:
   containerSecurityContext:
     readOnlyRootFilesystem: false
     runAsNonRoot: false
+  env:
+    - name: ORDER_VALIDATOR_ENDPOINT
+      value: "http://sample-express:8080/check-storage"
   resources:
     limits:
       memory: 512Mi
