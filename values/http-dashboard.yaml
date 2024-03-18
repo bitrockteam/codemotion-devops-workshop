@@ -158,7 +158,7 @@ resources:
             },
             "gridPos": {
               "h": 20,
-              "w": 14,
+              "w": 7,
               "x": 10,
               "y": 0
             },
@@ -193,7 +193,7 @@ resources:
                 },
                 "editorMode": "code",
                 "exemplar": false,
-                "expr": "avg_over_time(http_server_duration_milliseconds_count[$interval])",
+                "expr": "avg_over_time(http_server_duration_milliseconds_count{http_route=~\"${route}\", http_method=~\"${http_method}\"}[$interval])",
                 "format": "time_series",
                 "instant": true,
                 "legendFormat": "{{job}} {{http_method}} {{http_route}}",
@@ -202,6 +202,76 @@ resources:
               }
             ],
             "title": "Request distribution last $interval",
+            "type": "piechart"
+          },
+          {
+            "datasource": {
+              "type": "prometheus",
+              "uid": "${datasource}"
+            },
+            "description": "",
+            "fieldConfig": {
+              "defaults": {
+                "color": {
+                  "mode": "palette-classic"
+                },
+                "custom": {
+                  "hideFrom": {
+                    "legend": false,
+                    "tooltip": false,
+                    "viz": false
+                  }
+                },
+                "mappings": []
+              },
+              "overrides": []
+            },
+            "gridPos": {
+              "h": 20,
+              "w": 7,
+              "x": 17,
+              "y": 0
+            },
+            "id": 9,
+            "options": {
+              "displayLabels": [
+                "percent"
+              ],
+              "legend": {
+                "displayMode": "list",
+                "placement": "bottom",
+                "showLegend": true
+              },
+              "pieType": "pie",
+              "reduceOptions": {
+                "calcs": [
+                  "sum"
+                ],
+                "fields": "",
+                "values": false
+              },
+              "tooltip": {
+                "mode": "single",
+                "sort": "none"
+              }
+            },
+            "targets": [
+              {
+                "datasource": {
+                  "type": "prometheus",
+                  "uid": "${datasource}"
+                },
+                "editorMode": "code",
+                "exemplar": false,
+                "expr": "sum(increase(http_server_duration_milliseconds_count{http_route=~\"${route}\", http_method=~\"${http_method}\"}[$interval])) by (http_status_code)",
+                "format": "time_series",
+                "instant": true,
+                "legendFormat": "{{http_status_code}}",
+                "range": false,
+                "refId": "A"
+              }
+            ],
+            "title": "Status Codes last $interval",
             "type": "piechart"
           },
           {
@@ -361,7 +431,7 @@ resources:
             },
             {
               "current": {
-                "selected": false,
+                "selected": true,
                 "text": "All",
                 "value": "$__all"
               },
@@ -391,8 +461,8 @@ resources:
               "auto_min": "10s",
               "current": {
                 "selected": false,
-                "text": "30m",
-                "value": "30m"
+                "text": "5m",
+                "value": "5m"
               },
               "hide": 0,
               "label": "Interval",
@@ -409,7 +479,7 @@ resources:
                   "value": "2m"
                 },
                 {
-                  "selected": false,
+                  "selected": true,
                   "text": "5m",
                   "value": "5m"
                 },
@@ -419,7 +489,7 @@ resources:
                   "value": "10m"
                 },
                 {
-                  "selected": true,
+                  "selected": false,
                   "text": "30m",
                   "value": "30m"
                 }
@@ -440,6 +510,6 @@ resources:
         "timezone": "",
         "title": "HTTP Metrics OpenTelemetry",
         "uid": "637CE8DE-B2B3-40D5-B944-8C5BF2854A2D",
-        "version": 4,
+        "version": 5,
         "weekStart": ""
       }
