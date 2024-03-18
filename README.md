@@ -55,13 +55,13 @@ make apps
 benchmark springboot health check
 
 ```bash
-ab -n 10000 http://localhost:30000/springboot/hello
+ab -n 100 http://localhost:30000/springboot/hello
 ```
 
 benchmark express health check
 
 ```bash
-ab -n 10000 http://localhost:30000/express/health
+ab -n 100 http://localhost:30000/express/health
 ```
 
 create an order

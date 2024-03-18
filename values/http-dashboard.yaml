@@ -35,7 +35,7 @@ resources:
         "fiscalYearStartMonth": 0,
         "gnetId": 18860,
         "graphTooltip": 0,
-        "id": 1,
+        "id": 4,
         "links": [],
         "liveNow": false,
         "panels": [
@@ -96,7 +96,7 @@ resources:
               "overrides": []
             },
             "gridPos": {
-              "h": 8,
+              "h": 10,
               "w": 10,
               "x": 0,
               "y": 0
@@ -104,8 +104,11 @@ resources:
             "id": 3,
             "options": {
               "legend": {
-                "calcs": [],
-                "displayMode": "list",
+                "calcs": [
+                  "max",
+                  "min"
+                ],
+                "displayMode": "table",
                 "placement": "bottom",
                 "showLegend": true
               },
@@ -121,14 +124,14 @@ resources:
                   "uid": "${datasource}"
                 },
                 "editorMode": "code",
-                "expr": "avg(rate(http_server_duration_milliseconds_sum{http_route=~\"${route}\", http_method=~\"${http_method}\"}[$interval])) by (http_route, http_method) /\navg(rate(http_server_duration_milliseconds_count{http_route=~\"${route}\", http_method=~\"${http_method}\"}[$interval])) by (http_route, http_method)",
+                "expr": "avg(increase(http_server_duration_milliseconds_sum{http_route=~\"${route}\", http_method=~\"${http_method}\"}[$interval])) by (job, http_route, http_method) /\navg(increase(http_server_duration_milliseconds_count{http_route=~\"${route}\", http_method=~\"${http_method}\"}[$interval])) by (job, http_route, http_method)",
                 "hide": false,
-                "legendFormat": "{{http_method}} {{http_route}}",
+                "legendFormat": "{{job}} {{http_method}} {{http_route}}",
                 "range": true,
                 "refId": "A"
               }
             ],
-            "title": "Request Duration",
+            "title": "Avg Request Duration last $interval",
             "type": "timeseries"
           },
           {
@@ -154,7 +157,7 @@ resources:
               "overrides": []
             },
             "gridPos": {
-              "h": 11,
+              "h": 20,
               "w": 14,
               "x": 10,
               "y": 0
@@ -189,16 +192,16 @@ resources:
                   "uid": "${datasource}"
                 },
                 "editorMode": "code",
-                "exemplar": true,
-                "expr": "sum(rate(http_server_duration_milliseconds_count{http_route=~\"${route}\", http_method=~\"${http_method}\"}[$interval])) by (agent, http_route, http_method)",
+                "exemplar": false,
+                "expr": "avg_over_time(http_server_duration_milliseconds_count[$interval])",
                 "format": "time_series",
-                "instant": false,
-                "legendFormat": "{{http_method}} {{http_route}}",
-                "range": true,
+                "instant": true,
+                "legendFormat": "{{job}} {{http_method}} {{http_route}}",
+                "range": false,
                 "refId": "A"
               }
             ],
-            "title": "Top Requests Count",
+            "title": "Request distribution last $interval",
             "type": "piechart"
           },
           {
@@ -260,18 +263,22 @@ resources:
               "overrides": []
             },
             "gridPos": {
-              "h": 8,
+              "h": 10,
               "w": 10,
               "x": 0,
-              "y": 8
+              "y": 10
             },
             "id": 8,
             "options": {
               "legend": {
-                "calcs": [],
-                "displayMode": "list",
+                "calcs": [
+                  "lastNotNull"
+                ],
+                "displayMode": "table",
                 "placement": "bottom",
-                "showLegend": true
+                "showLegend": true,
+                "sortBy": "Last *",
+                "sortDesc": true
               },
               "tooltip": {
                 "mode": "single",
@@ -285,709 +292,14 @@ resources:
                   "uid": "${datasource}"
                 },
                 "editorMode": "code",
-                "expr": "(sum(rate(http_server_duration_milliseconds_count{http_route=~\"${route}\", http_method=~\"${http_method}\"}[$interval])) by (agent, http_route, http_method))",
+                "expr": "http_server_duration_milliseconds_count{http_route=~\"${route}\", http_method=~\"${http_method}\"}",
                 "hide": false,
-                "legendFormat": "{{http_method}} {{http_route}}",
+                "legendFormat": "{{job}} {{http_method}} {{http_route}}",
                 "range": true,
                 "refId": "A"
               }
             ],
             "title": "Total Requests",
-            "transformations": [],
-            "type": "timeseries"
-          },
-          {
-            "datasource": {
-              "type": "prometheus",
-              "uid": "${datasource}"
-            },
-            "fieldConfig": {
-              "defaults": {
-                "color": {
-                  "mode": "thresholds"
-                },
-                "custom": {
-                  "align": "auto",
-                  "cellOptions": {
-                    "type": "auto"
-                  },
-                  "filterable": false,
-                  "inspect": false
-                },
-                "mappings": [],
-                "thresholds": {
-                  "mode": "absolute",
-                  "steps": [
-                    {
-                      "color": "green",
-                      "value": null
-                    }
-                  ]
-                }
-              },
-              "overrides": [
-                {
-                  "matcher": {
-                    "id": "byName",
-                    "options": "5xx"
-                  },
-                  "properties": [
-                    {
-                      "id": "custom.cellOptions",
-                      "value": {
-                        "type": "color-text"
-                      }
-                    },
-                    {
-                      "id": "thresholds",
-                      "value": {
-                        "mode": "absolute",
-                        "steps": [
-                          {
-                            "color": "green",
-                            "value": null
-                          },
-                          {
-                            "color": "red",
-                            "value": 1
-                          }
-                        ]
-                      }
-                    },
-                    {
-                      "id": "custom.width",
-                      "value": 47
-                    }
-                  ]
-                },
-                {
-                  "matcher": {
-                    "id": "byName",
-                    "options": "4xx"
-                  },
-                  "properties": [
-                    {
-                      "id": "custom.cellOptions",
-                      "value": {
-                        "type": "color-text"
-                      }
-                    },
-                    {
-                      "id": "thresholds",
-                      "value": {
-                        "mode": "absolute",
-                        "steps": [
-                          {
-                            "color": "green",
-                            "value": null
-                          },
-                          {
-                            "color": "red",
-                            "value": 1
-                          }
-                        ]
-                      }
-                    },
-                    {
-                      "id": "custom.width",
-                      "value": 52
-                    }
-                  ]
-                },
-                {
-                  "matcher": {
-                    "id": "byName",
-                    "options": "3xx"
-                  },
-                  "properties": [
-                    {
-                      "id": "custom.width",
-                      "value": 48
-                    },
-                    {
-                      "id": "custom.cellOptions",
-                      "value": {
-                        "type": "color-text"
-                      }
-                    }
-                  ]
-                },
-                {
-                  "matcher": {
-                    "id": "byName",
-                    "options": "2xx"
-                  },
-                  "properties": [
-                    {
-                      "id": "custom.cellOptions",
-                      "value": {
-                        "type": "color-text"
-                      }
-                    },
-                    {
-                      "id": "custom.width",
-                      "value": 60
-                    }
-                  ]
-                },
-                {
-                  "matcher": {
-                    "id": "byName",
-                    "options": "Total time"
-                  },
-                  "properties": [
-                    {
-                      "id": "unit",
-                      "value": "ms"
-                    },
-                    {
-                      "id": "custom.width",
-                      "value": 91
-                    }
-                  ]
-                },
-                {
-                  "matcher": {
-                    "id": "byName",
-                    "options": "Avg time"
-                  },
-                  "properties": [
-                    {
-                      "id": "unit",
-                      "value": "s"
-                    },
-                    {
-                      "id": "custom.width",
-                      "value": 76
-                    }
-                  ]
-                },
-                {
-                  "matcher": {
-                    "id": "byName",
-                    "options": "Error rate"
-                  },
-                  "properties": [
-                    {
-                      "id": "unit",
-                      "value": "percentunit"
-                    },
-                    {
-                      "id": "custom.cellOptions",
-                      "value": {
-                        "type": "color-text"
-                      }
-                    },
-                    {
-                      "id": "thresholds",
-                      "value": {
-                        "mode": "absolute",
-                        "steps": [
-                          {
-                            "color": "green",
-                            "value": null
-                          },
-                          {
-                            "color": "#EAB839",
-                            "value": 0.01
-                          },
-                          {
-                            "color": "red",
-                            "value": 0.1
-                          }
-                        ]
-                      }
-                    },
-                    {
-                      "id": "mappings",
-                      "value": [
-                        {
-                          "options": {
-                            "NaN": {
-                              "index": 0,
-                              "text": "0%"
-                            }
-                          },
-                          "type": "value"
-                        }
-                      ]
-                    },
-                    {
-                      "id": "custom.width",
-                      "value": 83
-                    }
-                  ]
-                },
-                {
-                  "matcher": {
-                    "id": "byName",
-                    "options": "agent"
-                  },
-                  "properties": [
-                    {
-                      "id": "custom.width",
-                      "value": 63
-                    }
-                  ]
-                },
-                {
-                  "matcher": {
-                    "id": "byName",
-                    "options": "Method"
-                  },
-                  "properties": [
-                    {
-                      "id": "custom.width",
-                      "value": 65
-                    }
-                  ]
-                },
-                {
-                  "matcher": {
-                    "id": "byName",
-                    "options": "Requests"
-                  },
-                  "properties": [
-                    {
-                      "id": "custom.width",
-                      "value": 89
-                    }
-                  ]
-                },
-                {
-                  "matcher": {
-                    "id": "byName",
-                    "options": "Errors"
-                  },
-                  "properties": [
-                    {
-                      "id": "custom.width",
-                      "value": 63
-                    }
-                  ]
-                },
-                {
-                  "matcher": {
-                    "id": "byName",
-                    "options": "Route"
-                  },
-                  "properties": [
-                    {
-                      "id": "custom.width",
-                      "value": 162
-                    }
-                  ]
-                },
-                {
-                  "matcher": {
-                    "id": "byName",
-                    "options": "Avg time"
-                  },
-                  "properties": [
-                    {
-                      "id": "unit",
-                      "value": "ms"
-                    }
-                  ]
-                }
-              ]
-            },
-            "gridPos": {
-              "h": 16,
-              "w": 14,
-              "x": 10,
-              "y": 11
-            },
-            "id": 7,
-            "options": {
-              "cellHeight": "sm",
-              "footer": {
-                "countRows": false,
-                "fields": "",
-                "reducer": [
-                  "sum"
-                ],
-                "show": false
-              },
-              "showHeader": true,
-              "sortBy": [
-                {
-                  "desc": true,
-                  "displayName": "2xx"
-                }
-              ]
-            },
-            "pluginVersion": "10.1.5",
-            "targets": [
-              {
-                "datasource": {
-                  "type": "prometheus",
-                  "uid": "${datasource}"
-                },
-                "editorMode": "code",
-                "exemplar": true,
-                "expr": "sum(rate(http_server_duration_milliseconds_count{http_route=~\"${route}\", http_method=~\"${http_method}\"}[$interval])) by (agent, http_method, http_route)",
-                "format": "table",
-                "instant": false,
-                "interval": "",
-                "legendFormat": "x",
-                "range": true,
-                "refId": "A"
-              },
-              {
-                "datasource": {
-                  "type": "prometheus",
-                  "uid": "${datasource}"
-                },
-                "editorMode": "code",
-                "exemplar": true,
-                "expr": "sum(increase(http_server_duration_milliseconds_count{ttp_route=~\"${route}\", http_method=~\"${http_method}\", http_status_code=~\"2..\"}[$interval])) by (agent, http_method, http_route)",
-                "format": "table",
-                "hide": false,
-                "instant": false,
-                "interval": "",
-                "legendFormat": "x",
-                "range": true,
-                "refId": "B"
-              },
-              {
-                "datasource": {
-                  "type": "prometheus",
-                  "uid": "${datasource}"
-                },
-                "editorMode": "code",
-                "exemplar": true,
-                "expr": "sum(increase(http_server_duration_milliseconds_count{http_route=~\"${route}\", http_method=~\"${http_method}\", http_status_code=~\"3..\"}[$interval])) by (agent, http_method, http_route)",
-                "format": "table",
-                "hide": false,
-                "instant": false,
-                "interval": "",
-                "legendFormat": "x",
-                "range": true,
-                "refId": "C"
-              },
-              {
-                "datasource": {
-                  "type": "prometheus",
-                  "uid": "${datasource}"
-                },
-                "editorMode": "code",
-                "exemplar": true,
-                "expr": "sum(increase(http_server_duration_milliseconds_count{http_route=~\"${route}\", http_method=~\"${http_method}\", http_status_code=~\"4..\"}[$interval])) by (agent, http_method, http_route)",
-                "format": "table",
-                "hide": false,
-                "instant": false,
-                "interval": "",
-                "legendFormat": "x",
-                "range": true,
-                "refId": "D"
-              },
-              {
-                "datasource": {
-                  "type": "prometheus",
-                  "uid": "${datasource}"
-                },
-                "editorMode": "code",
-                "exemplar": true,
-                "expr": "sum(increase(http_server_duration_milliseconds_count{http_route=~\"${route}\", http_method=~\"${http_method}\", http_status_code=~\"5..\"}[$interval])) by (agent, http_method, http_route)",
-                "format": "table",
-                "hide": false,
-                "instant": false,
-                "interval": "",
-                "legendFormat": "x",
-                "range": true,
-                "refId": "E"
-              },
-              {
-                "datasource": {
-                  "type": "prometheus",
-                  "uid": "${datasource}"
-                },
-                "editorMode": "code",
-                "exemplar": true,
-                "expr": "sum(rate(http_server_duration_milliseconds_sum{http_route=~\"${route}\", http_method=~\"${http_method}\"}[$interval])) by (agent, http_method, http_route)",
-                "format": "table",
-                "hide": false,
-                "instant": false,
-                "interval": "",
-                "legendFormat": "x",
-                "range": true,
-                "refId": "F"
-              },
-              {
-                "datasource": {
-                  "type": "prometheus",
-                  "uid": "${datasource}"
-                },
-                "editorMode": "code",
-                "exemplar": true,
-                "expr": "(sum(rate(http_server_duration_milliseconds_sum{http_route=~\"${route}\", http_method=~\"${http_method}\"}[$interval])) by(agent, http_method, http_route) / sum(rate(http_server_duration_milliseconds_count{http_route=~\"${route}\", http_method=~\"${http_method}\"}[$interval])) by(agent, http_method, http_route) >= 0) OR on() vector(0)",
-                "format": "table",
-                "hide": false,
-                "instant": false,
-                "interval": "",
-                "legendFormat": "x",
-                "range": true,
-                "refId": "G"
-              }
-            ],
-            "title": "Requests statistics",
-            "transformations": [
-              {
-                "id": "merge",
-                "options": {}
-              },
-              {
-                "id": "groupBy",
-                "options": {
-                  "fields": {
-                    "Time": {
-                      "aggregations": []
-                    },
-                    "Value #A": {
-                      "aggregations": [
-                        "sum"
-                      ],
-                      "operation": "aggregate"
-                    },
-                    "Value #B": {
-                      "aggregations": [
-                        "sum"
-                      ],
-                      "operation": "aggregate"
-                    },
-                    "Value #C": {
-                      "aggregations": [
-                        "sum"
-                      ],
-                      "operation": "aggregate"
-                    },
-                    "Value #D": {
-                      "aggregations": [
-                        "sum"
-                      ],
-                      "operation": "aggregate"
-                    },
-                    "Value #E": {
-                      "aggregations": [
-                        "sum"
-                      ],
-                      "operation": "aggregate"
-                    },
-                    "Value #F": {
-                      "aggregations": [
-                        "sum"
-                      ],
-                      "operation": "aggregate"
-                    },
-                    "Value #G": {
-                      "aggregations": [
-                        "mean"
-                      ],
-                      "operation": "aggregate"
-                    },
-                    "Value #H": {
-                      "aggregations": [
-                        "allValues"
-                      ],
-                      "operation": "aggregate"
-                    },
-                    "Value #I": {
-                      "aggregations": [
-                        "allValues"
-                      ],
-                      "operation": "aggregate"
-                    },
-                    "agent": {
-                      "aggregations": [],
-                      "operation": "groupby"
-                    },
-                    "http_method": {
-                      "aggregations": [
-                        "sum"
-                      ],
-                      "operation": "groupby"
-                    },
-                    "http_route": {
-                      "aggregations": [],
-                      "operation": "groupby"
-                    },
-                    "instance": {
-                      "aggregations": [],
-                      "operation": "groupby"
-                    },
-                    "job": {
-                      "aggregations": [],
-                      "operation": "groupby"
-                    },
-                    "method": {
-                      "aggregations": [],
-                      "operation": "groupby"
-                    },
-                    "path": {
-                      "aggregations": [],
-                      "operation": "groupby"
-                    },
-                    "status": {
-                      "aggregations": [],
-                      "operation": "groupby"
-                    }
-                  }
-                }
-              },
-              {
-                "id": "organize",
-                "options": {
-                  "excludeByName": {
-                    "instance": true,
-                    "job": true
-                  },
-                  "indexByName": {},
-                  "renameByName": {
-                    "Value #A (sum)": "Requests",
-                    "Value #B (sum)": "2xx",
-                    "Value #C (sum)": "3xx",
-                    "Value #D (sum)": "4xx",
-                    "Value #E (sum)": "5xx",
-                    "Value #F (sum)": "Total time",
-                    "Value #G (mean)": "Avg time",
-                    "Value #G (sum)": "Avg duration",
-                    "http_method": "Method",
-                    "http_route": "Route"
-                  }
-                }
-              },
-              {
-                "id": "calculateField",
-                "options": {
-                  "alias": "Errors",
-                  "binary": {
-                    "left": "3xx",
-                    "reducer": "sum",
-                    "right": "4xx"
-                  },
-                  "mode": "reduceRow",
-                  "reduce": {
-                    "include": [
-                      "4xx",
-                      "5xx"
-                    ],
-                    "reducer": "sum"
-                  },
-                  "replaceFields": false
-                }
-              },
-              {
-                "id": "calculateField",
-                "options": {
-                  "alias": "Error rate",
-                  "binary": {
-                    "left": "Errors",
-                    "operator": "/",
-                    "reducer": "sum",
-                    "right": "Requests"
-                  },
-                  "mode": "binary",
-                  "reduce": {
-                    "reducer": "sum"
-                  }
-                }
-              }
-            ],
-            "type": "table"
-          },
-          {
-            "datasource": {
-              "type": "prometheus",
-              "uid": "${datasource}"
-            },
-            "fieldConfig": {
-              "defaults": {
-                "color": {
-                  "mode": "palette-classic"
-                },
-                "custom": {
-                  "axisCenteredZero": false,
-                  "axisColorMode": "text",
-                  "axisLabel": "",
-                  "axisPlacement": "auto",
-                  "barAlignment": 0,
-                  "drawStyle": "line",
-                  "fillOpacity": 0,
-                  "gradientMode": "none",
-                  "hideFrom": {
-                    "legend": false,
-                    "tooltip": false,
-                    "viz": false
-                  },
-                  "insertNulls": false,
-                  "lineInterpolation": "linear",
-                  "lineWidth": 1,
-                  "pointSize": 5,
-                  "scaleDistribution": {
-                    "type": "linear"
-                  },
-                  "showPoints": "auto",
-                  "spanNulls": false,
-                  "stacking": {
-                    "group": "A",
-                    "mode": "none"
-                  },
-                  "thresholdsStyle": {
-                    "mode": "off"
-                  }
-                },
-                "mappings": [],
-                "thresholds": {
-                  "mode": "absolute",
-                  "steps": [
-                    {
-                      "color": "green",
-                      "value": null
-                    },
-                    {
-                      "color": "red",
-                      "value": 80
-                    }
-                  ]
-                }
-              },
-              "overrides": []
-            },
-            "gridPos": {
-              "h": 8,
-              "w": 10,
-              "x": 0,
-              "y": 16
-            },
-            "id": 11,
-            "options": {
-              "legend": {
-                "calcs": [],
-                "displayMode": "list",
-                "placement": "bottom",
-                "showLegend": true
-              },
-              "tooltip": {
-                "mode": "single",
-                "sort": "none"
-              }
-            },
-            "targets": [
-              {
-                "datasource": {
-                  "type": "prometheus",
-                  "uid": "${datasource}"
-                },
-                "editorMode": "code",
-                "expr": "sum(increase(http_server_duration_milliseconds_count{job=~\"${Job}\", path=~\"${route}\", method=~\"${http_method}\", status_code=~\"4xx|5xx\"}[$interval])) by (agent, job, path, method)",
-                "hide": false,
-                "legendFormat": "{{method}} {{path}}",
-                "range": true,
-                "refId": "A"
-              }
-            ],
-            "title": "Total Errors",
             "transformations": [],
             "type": "timeseries"
           }
@@ -1001,7 +313,7 @@ resources:
           "list": [
             {
               "current": {
-                "selected": true,
+                "selected": false,
                 "text": "Mimir",
                 "value": "prom"
               },
@@ -1021,11 +333,15 @@ resources:
               "current": {
                 "selected": true,
                 "text": [
-                  "/hello"
+                  "All"
                 ],
                 "value": [
-                  "/hello"
+                  "$__all"
                 ]
+              },
+              "datasource": {
+                "type": "prometheus",
+                "uid": "prom"
               },
               "definition": "label_values(http_server_duration_milliseconds_count,http_route)",
               "hide": 0,
@@ -1045,9 +361,13 @@ resources:
             },
             {
               "current": {
-                "selected": true,
-                "text": "GET",
-                "value": "GET"
+                "selected": false,
+                "text": "All",
+                "value": "$__all"
+              },
+              "datasource": {
+                "type": "prometheus",
+                "uid": "prom"
               },
               "definition": "label_values(http_server_duration_milliseconds_count,http_method)",
               "hide": 0,
@@ -1071,8 +391,8 @@ resources:
               "auto_min": "10s",
               "current": {
                 "selected": false,
-                "text": "5m",
-                "value": "5m"
+                "text": "30m",
+                "value": "30m"
               },
               "hide": 0,
               "label": "Interval",
@@ -1089,7 +409,7 @@ resources:
                   "value": "2m"
                 },
                 {
-                  "selected": true,
+                  "selected": false,
                   "text": "5m",
                   "value": "5m"
                 },
@@ -1099,7 +419,7 @@ resources:
                   "value": "10m"
                 },
                 {
-                  "selected": false,
+                  "selected": true,
                   "text": "30m",
                   "value": "30m"
                 }
@@ -1113,13 +433,13 @@ resources:
           ]
         },
         "time": {
-          "from": "now-30m",
+          "from": "now-5m",
           "to": "now"
         },
         "timepicker": {},
         "timezone": "",
         "title": "HTTP Metrics OpenTelemetry",
         "uid": "637CE8DE-B2B3-40D5-B944-8C5BF2854A2D",
-        "version": 3,
+        "version": 4,
         "weekStart": ""
       }

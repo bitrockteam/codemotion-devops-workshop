@@ -54,16 +54,6 @@ releases:
     values:
       - values/http-dashboard.yaml
 
-  - name: db-dashboard
-    labels:
-      component: lgtm
-    namespace: monitoring
-    chart: bedag/raw
-    version: 2.0.0
-    condition: lgtm.enabled
-    values:
-      - values/db-dashboard.yaml
-
   - name: jvm-dashboard
     labels:
       component: lgtm

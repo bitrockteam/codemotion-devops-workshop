@@ -7,7 +7,7 @@ deployment:
     language: python
   image:
     repository: bitripa/flask-sample-app
-    tag: test
+    tag: 1.0.0
     pullPolicy: Always
   ports:
     - containerPort: 8080
